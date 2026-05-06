@@ -6,6 +6,7 @@ import {
   onUnmounted,
   useTemplateRef,
   computed,
+  watchEffect,
 } from "vue";
 
 const windowPosInterval = ref(null);
@@ -52,15 +53,38 @@ const pointRef = useTemplateRef("pointRef");
 
 const pointTelemetry = computed(() => {
   return {
-    posX: windowTelemetry.innerWidth / 2,
+    posX: windowTelemetry.innerWidth / 2 + windowTelemetry.posX,
     posY:
       windowTelemetry.innerHeight / 2 +
-      (windowTelemetry.height - windowTelemetry.innerHeight),
+      (windowTelemetry.height - windowTelemetry.innerHeight) +
+      windowTelemetry.posY,
   };
 });
+
+const angle = ref(0);
+
+watchEffect(() => {
+  let dx = screenSize.width / 2 - pointTelemetry.value.posX;
+  let dy = screenSize.height / 2 - pointTelemetry.value.posY;
+
+  angle.value = (Math.atan2(dy, dx) * 180) / Math.PI;
+
+  if (angle.value < 0) {
+    angle.value = 360 + angle.value;
+  }
+});
+
+const chainStyle = computed(
+  () => `transform: translate(0, -50%) rotate(${angle.value}deg)`,
+);
+
+function openNewWindow() {
+  window.open(window.location.href, "_blank", "width=400,height=400");
+}
 </script>
 
 <template>
+  <button class="open-window" @click="openNewWindow">open new window</button>
   <div class="info">
     <table>
       <tbody>
@@ -116,11 +140,17 @@ const pointTelemetry = computed(() => {
           <th class="text-left">height</th>
           <td>{{ screenSize.height }}</td>
         </tr>
+        <tr>
+          <th class="text-center" colspan="2">angle</th>
+        </tr>
+        <tr>
+          <td>{{ angle }}</td>
+        </tr>
       </tbody>
     </table>
   </div>
 
   <div ref="pointRef" class="point">
-    <div class="chain"></div>
+    <div class="chain" :style="chainStyle"></div>
   </div>
 </template>
