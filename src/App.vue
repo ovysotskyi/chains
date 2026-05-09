@@ -41,7 +41,7 @@ function getWindowPos() {
   return setInterval(() => {
     windowTelemetry.posX = window.screenX;
     windowTelemetry.posY = window.screenY;
-  }, 100);
+  }, 10);
 }
 
 function openNewWindow() {
