@@ -15,22 +15,6 @@ body {
   color: #D3DAD9;
 }
 
-table {
-  width: 10rem;
-}
-
-table td {
-  min-width: 3rem;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.text-left {
-  text-align: left;
-}
-
 .point {
   position: absolute;
   top: 50%;
@@ -54,7 +38,7 @@ table td {
   background-color: #715A5A;
 }
 
-.open-window {
+button.open-window {
   background-color: #D3DAD9;
   border: none;
   padding: 0.5rem 1rem;
